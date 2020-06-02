@@ -1,0 +1,843 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "agmet_mobile_version_update ",
+    "description" : "version update",
+    "version" : "1.0.0-oas3"
+  },
+  "servers" : [ {
+    "url" : "http://localhost"
+  } ],
+  "tags" : [ {
+    "name" : "farm"
+  }, {
+    "name" : "guidelines"
+  }, {
+    "name" : "survey"
+  } ],
+  "paths" : {
+    "/mobile/farm" : {
+      "get" : {
+        "tags" : [ "farm" ],
+        "summary" : "로그인 성공 후 화면",
+        "description" : "로그인 성공 후 phone_mobile 로 DB를 조회한 뒤 해당 농가의 지역과 작목을 가져온다.\n",
+        "parameters" : [ {
+          "name" : "phoneMobile",
+          "in" : "query",
+          "description" : "로그인을 확인하는 요소",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "date",
+          "in" : "query",
+          "description" : "날짜를 선택하면 해당 날짜의 데이터를 가져옴 | 기본값은 오늘 날짜",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "응답 성공",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/initData"
+                  },
+                  "x-content-type" : "application/json"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      }
+    },
+    "/mobile/farm/weatherReport" : {
+      "get" : {
+        "tags" : [ "farm" ],
+        "summary" : "기상특보 조회",
+        "description" : "해당 지역의 기상특보를 가져온다\n",
+        "parameters" : [ {
+          "name" : "regionId",
+          "in" : "query",
+          "description" : "해당 지역 id",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "example" : 111
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "응답 성공",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/weatherReport"
+                  },
+                  "x-content-type" : "application/json"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mobile/farm/weahterInfo" : {
+      "get" : {
+        "tags" : [ "farm" ],
+        "summary" : "기상 정보 조회",
+        "description" : "해당 지역의 열흘간의 기상정보를 가져온다\n",
+        "parameters" : [ {
+          "name" : "regionId",
+          "in" : "query",
+          "description" : "해당 지역 id",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "example" : 111
+          }
+        }, {
+          "name" : "date",
+          "in" : "query",
+          "description" : "날짜를 선택하면 해당 날짜를 포함한 열흘간의 데이터를 가져옴 | 기본값은 오늘 날짜(yyyy-MM-dd)",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "2020-06-01"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "응답 성공",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/weatherInfo"
+                  },
+                  "x-content-type" : "application/json"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "invaild parameters"
+          },
+          "404" : {
+            "description" : "not found"
+          }
+        }
+      }
+    },
+    "/mobile/farm/disaster" : {
+      "get" : {
+        "tags" : [ "farm" ],
+        "summary" : "작목 재해 정보 조회",
+        "description" : "작목의 생육단계에 대한 재해를 알려준다\n",
+        "parameters" : [ {
+          "name" : "farmId",
+          "in" : "query",
+          "description" : "농장 id",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "example" : 253
+          }
+        }, {
+          "name" : "plant",
+          "in" : "query",
+          "description" : "작목 id 기본값은 해당 농가의 우선순위 작목으로 한다. ",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "apple"
+          }
+        }, {
+          "name" : "growthStage",
+          "in" : "query",
+          "description" : "생육 단계 ",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "과실비대초기"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "응답 성공",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/disasterInfo"
+                  },
+                  "x-content-type" : "application/json"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "invaild parameters"
+          },
+          "404" : {
+            "description" : "not found"
+          }
+        }
+      }
+    },
+    "/mobile/guidelines" : {
+      "post" : {
+        "tags" : [ "guidelines" ],
+        "summary" : "대응지침",
+        "description" : "해당 지역의 재해를 알려주는 페이지\n",
+        "requestBody" : {
+          "description" : "대응지침을 가져오기 위한 요청 본문",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/rqGuidelines"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "응답 성공",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/guidelines"
+                  },
+                  "x-content-type" : "application/json"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mobile/survey" : {
+      "get" : {
+        "tags" : [ "survey" ],
+        "summary" : "설문조사 페이지",
+        "description" : "예측 시스템이 얼마나 맞았는지 설문지를 가져온다.\n",
+        "parameters" : [ {
+          "name" : "farmId",
+          "in" : "query",
+          "description" : "해당 농가 id",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "example" : 253
+          }
+        }, {
+          "name" : "date",
+          "in" : "query",
+          "description" : "재해가 발생한 날짜",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "2020-06-02"
+          }
+        }, {
+          "name" : "plant",
+          "in" : "query",
+          "description" : "해당 농가가 키우고 있는 작물. 기본값은 우선순위를 정해서 가져온다.",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "apple"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "작성 성공",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/surveyInfo"
+                  },
+                  "x-content-type" : "application/json"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mobile/survey/submit" : {
+      "post" : {
+        "tags" : [ "survey" ],
+        "summary" : "설문조사 작성",
+        "description" : "예측 시스템이 얼마나 맞았는지 사용자가 설문을 작성한다.\n",
+        "requestBody" : {
+          "description" : "설문 작성 내용이 담겨있는 요청 본문",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/sendSurveyData"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "작성 성공"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "initData" : {
+        "type" : "object",
+        "properties" : {
+          "regionId" : {
+            "type" : "integer",
+            "example" : 111
+          },
+          "regionNm" : {
+            "type" : "string",
+            "example" : "고창면 고창리 123-234"
+          },
+          "farmId" : {
+            "type" : "integer",
+            "example" : 253
+          },
+          "plant" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/plant"
+            }
+          }
+        },
+        "example" : {
+          "regionId" : 111,
+          "plant" : [ {
+            "ko" : "사과",
+            "growthStage" : [ "과실비대초기", "과육단계" ],
+            "id" : "apple"
+          }, {
+            "ko" : "사과",
+            "growthStage" : [ "과실비대초기", "과육단계" ],
+            "id" : "apple"
+          } ],
+          "regionNm" : "고창면 고창리 123-234",
+          "farmId" : 253
+        }
+      },
+      "plant" : {
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "example" : "apple"
+          },
+          "growthStage" : {
+            "type" : "array",
+            "example" : [ "과실비대초기", "과육단계" ]
+          },
+          "ko" : {
+            "type" : "string",
+            "example" : "사과"
+          }
+        },
+        "example" : {
+          "ko" : "사과",
+          "growthStage" : [ "과실비대초기", "과육단계" ],
+          "id" : "apple"
+        }
+      },
+      "weatherReport" : {
+        "type" : "object",
+        "properties" : {
+          "date" : {
+            "type" : "string",
+            "description" : "yyyy-MM-dd 00:00:00",
+            "example" : "2020년 6월 1일 18시 00분"
+          },
+          "report" : {
+            "type" : "string",
+            "description" : "기상특보",
+            "example" : "강풍주의보 발표"
+          }
+        },
+        "description" : "기상 특보 자료",
+        "example" : {
+          "date" : "2020년 6월 1일 18시 00분",
+          "report" : "강풍주의보 발표"
+        }
+      },
+      "weatherInfo" : {
+        "type" : "object",
+        "properties" : {
+          "date" : {
+            "type" : "string",
+            "description" : "yyyy-MM-dd",
+            "example" : "2020년 6월 1일 월요일 오늘"
+          },
+          "tmax" : {
+            "type" : "string",
+            "description" : "최고기온",
+            "example" : "22.0℃"
+          },
+          "tmin" : {
+            "type" : "string",
+            "description" : "최저기온",
+            "example" : "5.0℃"
+          },
+          "rainfall" : {
+            "type" : "string",
+            "description" : "강수량",
+            "example" : "0.0mm"
+          },
+          "wmean" : {
+            "type" : "string",
+            "description" : "평균 풍속",
+            "example" : "0.4m/s"
+          },
+          "wmax" : {
+            "type" : "string",
+            "description" : "최고 풍속",
+            "example" : "4.2m/s"
+          },
+          "insolation" : {
+            "type" : "string",
+            "description" : "일사량",
+            "example" : "24.6MJ/㎡"
+          },
+          "sunshine" : {
+            "type" : "string",
+            "description" : "일조",
+            "example" : "9.9시간"
+          }
+        },
+        "description" : "열흘 동안 기상 자료",
+        "example" : {
+          "date" : "2020년 6월 1일 월요일 오늘",
+          "insolation" : "24.6MJ/㎡",
+          "rainfall" : "0.0mm",
+          "sunshine" : "9.9시간",
+          "tmax" : "22.0℃",
+          "tmin" : "5.0℃",
+          "wmax" : "4.2m/s",
+          "wmean" : "0.4m/s"
+        }
+      },
+      "disasterInfo" : {
+        "type" : "object",
+        "properties" : {
+          "date" : {
+            "type" : "string",
+            "description" : "재해가 발생한 날짜",
+            "example" : "2020-06-02"
+          },
+          "water" : {
+            "type" : "integer",
+            "description" : "수해",
+            "example" : 1
+          },
+          "lt" : {
+            "type" : "integer",
+            "description" : "저온해",
+            "example" : 3
+          },
+          "wind" : {
+            "type" : "integer",
+            "description" : "풍해",
+            "example" : 2
+          },
+          "freeze" : {
+            "type" : "integer",
+            "description" : "동해",
+            "example" : 0
+          },
+          "ht" : {
+            "type" : "integer",
+            "description" : "고온해",
+            "example" : 0
+          },
+          "burn" : {
+            "type" : "integer",
+            "description" : "일소",
+            "example" : 0
+          }
+        },
+        "description" : "해당 작목의 생육단계의 재해정보 |\n  0 -  추정시기 아님 |\n  1 - 안전 |\n  2 - 주의 |\n  3 - 경보를 뜻함\n",
+        "example" : {
+          "date" : "2020-06-02",
+          "burn" : 0,
+          "freeze" : 0,
+          "lt" : 3,
+          "ht" : 0,
+          "water" : 1,
+          "wind" : 2
+        }
+      },
+      "rqGuidelines" : {
+        "type" : "object",
+        "properties" : {
+          "farmId" : {
+            "type" : "integer",
+            "description" : "농가 id",
+            "example" : 253
+          },
+          "plant" : {
+            "type" : "string",
+            "description" : "해당 농가 작목",
+            "example" : "apple"
+          },
+          "date" : {
+            "type" : "string",
+            "description" : "재해가 발생한 날자",
+            "example" : "2020-06-02"
+          },
+          "disaster" : {
+            "type" : "object",
+            "example" : {
+              "water" : 1,
+              "lt" : 3,
+              "wind" : 2,
+              "freeze" : 0,
+              "ht" : 0,
+              "burn" : 0
+            }
+          }
+        },
+        "description" : "대응지침을 요청하기 위한 본문"
+      },
+      "guidelines" : {
+        "type" : "object",
+        "properties" : {
+          "date" : {
+            "type" : "string",
+            "description" : "재해 발생 날짜",
+            "example" : "2020-06-02"
+          },
+          "plant" : {
+            "type" : "object",
+            "description" : "해당 농가 작목",
+            "example" : {
+              "apple" : [ "과실 비대초기", "생육단계" ],
+              "peach" : [ "...", "..." ]
+            }
+          },
+          "content" : {
+            "type" : "array",
+            "description" : "해당되는 대응지침",
+            "items" : {
+              "$ref" : "#/components/schemas/disasterGuidelines"
+            }
+          }
+        },
+        "description" : "작목별로 대응지침을 알려준다. 만약 재해가 발생하지 않았다면 해당 대응지침은 나오지 않는다. ex) freeze(동해)가 0일 경우 freeze에 해당하는 대응지침은 안나옴",
+        "example" : {
+          "date" : "2020-06-02",
+          "plant" : {
+            "apple" : [ "과실 비대초기", "생육단계" ],
+            "peach" : [ "...", "..." ]
+          },
+          "content" : [ {
+            "burn" : [ null, null ],
+            "freeze" : [ null, null ],
+            "lt" : [ null, null ],
+            "ht" : [ null, null ],
+            "water" : [ {
+              "before" : "사전에는 ...한 대응지침이 필요함",
+              "now" : "현재는 ...한 대응지침이 필요함",
+              "after" : "사후에는 ...한 대응지침이 필요함"
+            }, {
+              "before" : "사전에는 ...한 대응지침이 필요함",
+              "now" : "현재는 ...한 대응지침이 필요함",
+              "after" : "사후에는 ...한 대응지침이 필요함"
+            } ],
+            "wind" : [ null, null ]
+          }, {
+            "burn" : [ null, null ],
+            "freeze" : [ null, null ],
+            "lt" : [ null, null ],
+            "ht" : [ null, null ],
+            "water" : [ {
+              "before" : "사전에는 ...한 대응지침이 필요함",
+              "now" : "현재는 ...한 대응지침이 필요함",
+              "after" : "사후에는 ...한 대응지침이 필요함"
+            }, {
+              "before" : "사전에는 ...한 대응지침이 필요함",
+              "now" : "현재는 ...한 대응지침이 필요함",
+              "after" : "사후에는 ...한 대응지침이 필요함"
+            } ],
+            "wind" : [ null, null ]
+          } ]
+        }
+      },
+      "disasterGuidelines" : {
+        "type" : "object",
+        "properties" : {
+          "water" : {
+            "type" : "array",
+            "description" : "수해 대응지침",
+            "items" : {
+              "$ref" : "#/components/schemas/disasterGuidelinesContent"
+            }
+          },
+          "lt" : {
+            "type" : "array",
+            "description" : "저온해 대응지침",
+            "items" : {
+              "$ref" : "#/components/schemas/disasterGuidelinesContent"
+            }
+          },
+          "wind" : {
+            "type" : "array",
+            "description" : "풍해 대응지침",
+            "items" : {
+              "$ref" : "#/components/schemas/disasterGuidelinesContent"
+            }
+          },
+          "freeze" : {
+            "type" : "array",
+            "description" : "동해 대응지침",
+            "items" : {
+              "$ref" : "#/components/schemas/disasterGuidelinesContent"
+            }
+          },
+          "ht" : {
+            "type" : "array",
+            "description" : "고온해 대응지침",
+            "items" : {
+              "$ref" : "#/components/schemas/disasterGuidelinesContent"
+            }
+          },
+          "burn" : {
+            "type" : "array",
+            "description" : "일소 대응지침",
+            "items" : {
+              "$ref" : "#/components/schemas/disasterGuidelinesContent"
+            }
+          }
+        },
+        "description" : "재해 대응지침.",
+        "example" : {
+          "burn" : [ null, null ],
+          "freeze" : [ null, null ],
+          "lt" : [ null, null ],
+          "ht" : [ null, null ],
+          "water" : [ {
+            "before" : "사전에는 ...한 대응지침이 필요함",
+            "now" : "현재는 ...한 대응지침이 필요함",
+            "after" : "사후에는 ...한 대응지침이 필요함"
+          }, {
+            "before" : "사전에는 ...한 대응지침이 필요함",
+            "now" : "현재는 ...한 대응지침이 필요함",
+            "after" : "사후에는 ...한 대응지침이 필요함"
+          } ],
+          "wind" : [ null, null ]
+        }
+      },
+      "disasterGuidelinesContent" : {
+        "type" : "object",
+        "properties" : {
+          "before" : {
+            "type" : "string",
+            "description" : "사전 대응지침",
+            "example" : "사전에는 ...한 대응지침이 필요함"
+          },
+          "now" : {
+            "type" : "string",
+            "description" : "즉시 대응지침",
+            "example" : "현재는 ...한 대응지침이 필요함"
+          },
+          "after" : {
+            "type" : "string",
+            "description" : "사후 대응지침",
+            "example" : "사후에는 ...한 대응지침이 필요함"
+          }
+        },
+        "example" : {
+          "before" : "사전에는 ...한 대응지침이 필요함",
+          "now" : "현재는 ...한 대응지침이 필요함",
+          "after" : "사후에는 ...한 대응지침이 필요함"
+        }
+      },
+      "surveyInfo" : {
+        "type" : "object",
+        "properties" : {
+          "farmInfo" : {
+            "type" : "array",
+            "description" : "farmId 로 조회한 농가 정보",
+            "items" : {
+              "$ref" : "#/components/schemas/initData"
+            }
+          },
+          "content" : {
+            "type" : "array",
+            "description" : "재해가 발생한 날짜",
+            "items" : {
+              "$ref" : "#/components/schemas/surveyContent"
+            }
+          }
+        },
+        "description" : "설문조사 내용",
+        "example" : {
+          "farmInfo" : [ {
+            "regionId" : 111,
+            "plant" : [ {
+              "ko" : "사과",
+              "growthStage" : [ "과실비대초기", "과육단계" ],
+              "id" : "apple"
+            }, {
+              "ko" : "사과",
+              "growthStage" : [ "과실비대초기", "과육단계" ],
+              "id" : "apple"
+            } ],
+            "regionNm" : "고창면 고창리 123-234",
+            "farmId" : 253
+          }, {
+            "regionId" : 111,
+            "plant" : [ {
+              "ko" : "사과",
+              "growthStage" : [ "과실비대초기", "과육단계" ],
+              "id" : "apple"
+            }, {
+              "ko" : "사과",
+              "growthStage" : [ "과실비대초기", "과육단계" ],
+              "id" : "apple"
+            } ],
+            "regionNm" : "고창면 고창리 123-234",
+            "farmId" : 253
+          } ],
+          "content" : [ {
+            "burn" : 0,
+            "freeze" : 0,
+            "lt" : 1,
+            "ht" : 0,
+            "water" : 3,
+            "wind" : 2
+          }, {
+            "burn" : 0,
+            "freeze" : 0,
+            "lt" : 1,
+            "ht" : 0,
+            "water" : 3,
+            "wind" : 2
+          } ]
+        }
+      },
+      "surveyContent" : {
+        "type" : "object",
+        "properties" : {
+          "water" : {
+            "type" : "integer",
+            "description" : "재해 종류에 따른 답변 | 답변 0은 설문 미완료 1은 모름 2은 발생 3는 발생없음",
+            "example" : 3
+          },
+          "lt" : {
+            "type" : "integer",
+            "description" : "재해 종류에 따른 답변 | 답변 0은 설문 미완료 1은 모름 2은 발생 3는 발생없음",
+            "example" : 1
+          },
+          "wind" : {
+            "type" : "integer",
+            "description" : "재해 종류에 따른 답변 | 답변 0은 설문 미완료 1은 모름 2은 발생 3는 발생없음",
+            "example" : 2
+          },
+          "freeze" : {
+            "type" : "integer",
+            "description" : "재해 종류에 따른 답변 | 답변 0은 설문 미완료 1은 모름 2은 발생 3는 발생없음",
+            "example" : 0
+          },
+          "ht" : {
+            "type" : "integer",
+            "description" : "재해 종류에 따른 답변 | 답변 0은 설문 미완료 1은 모름 2은 발생 3는 발생없음",
+            "example" : 0
+          },
+          "burn" : {
+            "type" : "integer",
+            "description" : "재해 종류에 따른 답변 | 답변 0은 설문 미완료 1은 모름 2은 발생 3는 발생없음",
+            "example" : 0
+          }
+        },
+        "description" : "날짜별로 발생한 해당 지역의 재해에 대한 답변 내용",
+        "example" : {
+          "burn" : 0,
+          "freeze" : 0,
+          "lt" : 1,
+          "ht" : 0,
+          "water" : 3,
+          "wind" : 2
+        }
+      },
+      "sendSurveyData" : {
+        "type" : "object",
+        "properties" : {
+          "farmId" : {
+            "type" : "integer",
+            "description" : "농가 id",
+            "example" : 253
+          },
+          "date" : {
+            "type" : "string",
+            "description" : "재해가 발생한 날짜",
+            "example" : "2020-06-02"
+          },
+          "plant" : {
+            "type" : "string",
+            "description" : "작목",
+            "example" : "apple"
+          },
+          "growthStage" : {
+            "type" : "string",
+            "description" : "생육단계",
+            "example" : "과실비대초기"
+          },
+          "answer" : {
+            "type" : "array",
+            "description" : "재해 종류에 따른 답변 | 답변 0은 설문 미완료 1은 모름 2은 발생 3는 발생없음",
+            "items" : {
+              "$ref" : "#/components/schemas/surveyContent"
+            }
+          }
+        },
+        "description" : "설문조사를 완료한 데이터"
+      }
+    }
+  }
+}
